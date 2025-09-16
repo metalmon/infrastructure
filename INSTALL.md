@@ -26,19 +26,36 @@ chmod +x monitoring/*.sh
 
 ### 2. Setup Security (Recommended)
 
+**⚠️ CRITICAL**: The security script disables root access! Create a new user first:
+
 ```bash
-# Generate SSH key (if you don't have one)
+# 1. Create new user (as root)
+sudo su -
+adduser yourusername
+usermod -aG sudo yourusername
+
+# 2. Setup SSH keys for new user
+su - yourusername
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys  # Paste your public key here
+chmod 600 ~/.ssh/authorized_keys
+
+# 3. Test new user access
+exit
+ssh yourusername@your-server-ip
+
+# 4. Generate SSH key (if you don't have one)
 ssh-keygen -t ed25519 -C "your-email@example.com"
 
-# Copy SSH key to server
-ssh-copy-id -i ~/.ssh/id_ed25519.pub user@your-server-ip
-
-# Run automated security setup
+# 5. Run automated security setup
 ./setup-security.sh [ssh_port] [ssh_user]
 
 # Example:
-./setup-security.sh 2222 myuser
+./setup-security.sh 2222 yourusername
 ```
+
+**⚠️ WARNING**: If you run the security script without creating a new user first, you will lose access to the server!
 
 ### 3. Configure Domain
 

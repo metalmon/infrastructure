@@ -71,13 +71,36 @@ Use the unified management script:
 
 ### Quick Security Setup
 
+**⚠️ CRITICAL**: The security script disables root access! Create a new user first:
+
 ```bash
-# Automated security setup (recommended)
+# 1. Create new user (as root)
+sudo su -
+adduser yourusername
+usermod -aG sudo yourusername
+
+# 2. Setup SSH keys for new user
+su - yourusername
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys  # Paste your public key here
+chmod 600 ~/.ssh/authorized_keys
+
+# 3. Test new user access
+exit
+ssh yourusername@your-server-ip
+
+# 4. Run automated security setup
 ./setup-security.sh [ssh_port] [ssh_user]
+
+# Example:
+./setup-security.sh 2222 yourusername
 
 # Manual security check
 ./security-check.sh
 ```
+
+**⚠️ WARNING**: If you run the security script without creating a new user first, you will lose access to the server!
 
 ### Security Features
 

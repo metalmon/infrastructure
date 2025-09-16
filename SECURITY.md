@@ -8,6 +8,64 @@ Complete guide for securing your server with SSH keys and firewall configuration
 - Access to the server via SSH
 - Your local SSH key pair
 
+## ⚠️ CRITICAL: Setup Sequence
+
+**IMPORTANT**: The security script disables root access, so you MUST create a new user first!
+
+### 1. Create New User (as root)
+
+```bash
+# Login as root
+sudo su -
+
+# Create new user
+adduser yourusername
+
+# Add to sudo group
+usermod -aG sudo yourusername
+
+# Verify user creation
+id yourusername
+```
+
+### 2. Setup SSH Keys for New User
+
+```bash
+# Switch to new user
+su - yourusername
+
+# Create .ssh directory
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+# Add your public key
+nano ~/.ssh/authorized_keys
+# Paste your ~/.ssh/id_ed25519.pub content here
+
+# Set correct permissions
+chmod 600 ~/.ssh/authorized_keys
+chown -R yourusername:yourusername ~/.ssh
+```
+
+### 3. Test New User Access
+
+```bash
+# Exit root session
+exit
+
+# Test SSH connection with new user
+ssh yourusername@your-server-ip
+```
+
+### 4. Run Security Script
+
+```bash
+# Only after confirming new user works
+./setup-security.sh 22 yourusername
+```
+
+**⚠️ WARNING**: If you run the security script without creating a new user first, you will lose access to the server!
+
 ## 🔑 SSH Key Setup
 
 ### 1. Generate SSH Key Pair (on your local machine)
