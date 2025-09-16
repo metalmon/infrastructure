@@ -1,0 +1,53 @@
+# Universal Prometheus configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Traefik metrics
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['traefik-proxy:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Node Exporter (system metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # cAdvisor (container metrics)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+
+  # Grafana
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 30s
+
+  # Example: Add your application metrics here
+  # - job_name: 'your-app'
+  #   static_configs:
+  #     - targets: ['your-app:8080']
+  #   metrics_path: '/metrics'
+  #   scrape_interval: 15s
+  #   basic_auth:
+  #     username: 'metrics'
+  #     password: '${METRICS_API_KEY}'

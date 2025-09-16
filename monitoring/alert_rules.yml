@@ -1,0 +1,107 @@
+# Universal Alert Rules
+groups:
+  - name: system.rules
+    rules:
+      # Service down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} is down"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanizePercentage }}"
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}%"
+
+      # Disk space low
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space low"
+          description: "Disk space is {{ $value | humanizePercentage }}"
+
+      # Container restart
+      - alert: ContainerRestart
+        expr: increase(container_start_time_seconds[1h]) > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container restarted"
+          description: "Container {{ $labels.name }} has restarted"
+
+  - name: traefik.rules
+    rules:
+      # Traefik service down
+      - alert: TraefikDown
+        expr: up{job="traefik"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Traefik is down"
+          description: "Traefik reverse proxy is not responding"
+
+      # High Traefik error rate
+      - alert: TraefikHighErrorRate
+        expr: rate(traefik_http_requests_total{code=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Traefik error rate"
+          description: "Traefik error rate is {{ $value }} errors per second"
+
+  - name: application.rules
+    rules:
+      # Example: High error rate for your application
+      # - alert: HighErrorRate
+      #   expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+      #   for: 2m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "High error rate detected"
+      #     description: "Error rate is {{ $value }} errors per second"
+
+      # Example: High response time for your application
+      # - alert: HighResponseTime
+      #   expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+      #   for: 5m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "High response time detected"
+      #     description: "95th percentile response time is {{ $value }} seconds"
+
+      # Example: Application service down
+      # - alert: ApplicationDown
+      #   expr: up{job="your-app"} == 0
+      #   for: 1m
+      #   labels:
+      #     severity: critical
+      #   annotations:
+      #     summary: "Application is down"
+      #     description: "Your application is not responding"

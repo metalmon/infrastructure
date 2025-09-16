@@ -1,0 +1,45 @@
+# Universal Infrastructure .gitignore
+
+# Environment files
+*.env
+env.*
+
+# Data directories
+traefik/letsencrypt/
+monitoring/prometheus_data/
+monitoring/grafana_data/
+
+# Backup files
+*.tar.gz
+*.backup
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+.dockerignore
+
+# Security backups
+*.backup.*
+ssh_config.backup.*
