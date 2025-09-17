@@ -20,13 +20,12 @@ make install
 Edit the `env.traefik` file:
 
 ```bash
-# Domain configuration
 DOMAIN=your-domain.com
 ACME_EMAIL=admin@your-domain.com
-
-# Network configuration
 TRAEFIK_NETWORK=traefik
 ```
+
+**Important**: Do not add comments or spaces around the `=` sign in the env file.
 
 ### 3. Start
 

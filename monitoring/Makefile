@@ -16,17 +16,22 @@ help:
 # Start monitoring
 start:
 	@echo "Starting monitoring stack..."
-	docker-compose --env-file env.monitoring up -d
+	@if [ ! -f env.monitoring ]; then \
+		echo "Error: env.monitoring file not found!"; \
+		echo "Please create env.monitoring with your configuration"; \
+		exit 1; \
+	fi
+	@export UID=$$(id -u) GID=$$(id -g) && export $$(cat env.monitoring | grep -v '^#' | xargs) && docker compose up -d
 	@echo "Monitoring stack started successfully!"
-	@echo "Prometheus: http://localhost:9090"
-	@echo "Grafana: http://localhost:3000 (admin/admin123)"
-	@echo "Node Exporter: http://localhost:9100"
-	@echo "cAdvisor: http://localhost:8081"
+	@echo "Prometheus: https://ya.notissimus.com/prometheus"
+	@echo "Grafana: https://ya.notissimus.com/grafana (admin/admin123)"
+	@echo "Node Exporter: https://ya.notissimus.com/node-exporter"
+	@echo "cAdvisor: https://ya.notissimus.com/cadvisor"
 
 # Stop monitoring
 stop:
 	@echo "Stopping monitoring stack..."
-	docker-compose --env-file env.monitoring down
+	docker compose down
 	@echo "Monitoring stack stopped successfully!"
 
 # Restart monitoring
@@ -34,16 +39,16 @@ restart: stop start
 
 # Show logs
 logs:
-	docker-compose --env-file env.monitoring logs -f
+	docker compose logs -f
 
 # Show status
 status:
-	docker-compose --env-file env.monitoring ps
+	docker compose ps
 
 # Clean up
 clean:
 	@echo "Cleaning up monitoring data..."
-	docker-compose --env-file env.monitoring down -v
+	docker compose down -v
 	docker system prune -f
 	@echo "Cleanup completed!"
 

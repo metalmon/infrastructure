@@ -16,7 +16,14 @@ help:
 # Start Traefik
 start:
 	@echo "Starting Traefik proxy..."
-	docker-compose --env-file env.traefik up -d
+	@if [ ! -f env.traefik ]; then \
+		echo "Error: env.traefik file not found!"; \
+		echo "Please create env.traefik with your domain and email:"; \
+		echo "DOMAIN=your-domain.com"; \
+		echo "ACME_EMAIL=admin@your-domain.com"; \
+		exit 1; \
+	fi
+	@export $$(cat env.traefik | grep -v '^#' | xargs) && docker compose up -d
 	@echo "Traefik started successfully!"
 	@echo "Dashboard: http://localhost:8080"
 	@echo "API: http://localhost:8080/api/rawdata"
@@ -24,7 +31,7 @@ start:
 # Stop Traefik
 stop:
 	@echo "Stopping Traefik proxy..."
-	docker-compose --env-file env.traefik down
+	docker compose down
 	@echo "Traefik stopped successfully!"
 
 # Restart Traefik
@@ -32,16 +39,16 @@ restart: stop start
 
 # Show logs
 logs:
-	docker-compose --env-file env.traefik logs -f
+	docker compose logs -f
 
 # Show status
 status:
-	docker-compose --env-file env.traefik ps
+	docker compose ps
 
 # Clean up
 clean:
 	@echo "Cleaning up Traefik data..."
-	docker-compose --env-file env.traefik down -v
+	docker compose down -v
 	docker system prune -f
 	@echo "Cleanup completed!"
 

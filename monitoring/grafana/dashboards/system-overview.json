@@ -1,7 +1,6 @@
 {
-  "dashboard": {
-    "id": null,
-    "title": "System Overview",
+  "id": null,
+  "title": "System Overview",
     "tags": ["system", "infrastructure", "monitoring"],
     "style": "dark",
     "timezone": "browser",
@@ -247,5 +246,4 @@
         }
       }
     ]
-  }
 }
