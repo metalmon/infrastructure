@@ -1,37 +1,14 @@
-# Universal Monitoring .gitignore
-
-# Environment files
-*.env
-env.*
+# Environment variables
+.env
 
 # Data directories
 prometheus_data/
 grafana_data/
-
-# Backup files
-*.tar.gz
-*.backup
+alertmanager_data/
 
 # Logs
 *.log
-logs/
 
 # Temporary files
 *.tmp
 *.temp
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~

@@ -1,22 +1,78 @@
 # 📊 Universal Monitoring Stack
 
-A comprehensive monitoring system with Prometheus, Grafana, and Traefik for any application.
+A comprehensive monitoring system with Prometheus, Grafana, Alertmanager, and Telegram notifications for any application.
+
+## 📚 Documentation
+
+**All documentation is located in the [`docs/`](docs/) directory:**
+
+- **[docs/README.md](docs/README.md)** - Overview of all documentation
+- **[docs/SETUP_INSTRUCTIONS.md](docs/SETUP_INSTRUCTIONS.md)** - Complete setup guide
+- **[docs/QUICK_START.md](docs/QUICK_START.md)** - Quick start for experienced users
+- **[docs/TELEGRAM_ALERTS_SETUP.md](docs/TELEGRAM_ALERTS_SETUP.md)** - Detailed Telegram alerts setup
+- **[docs/SECURITY.md](docs/SECURITY.md)** - Security guide and secrets management
+- **[docs/AUTH_SETUP.md](docs/AUTH_SETUP.md)** - Authentication setup guide
+
+## 🚀 Quick Start
+
+### 1. Setup Environment Variables
+```bash
+cd infrastructure/monitoring
+cp env.template .env
+```
+
+### 2. Generate Authentication Hashes
+```bash
+# Simple generation (standard usernames)
+./generate-auth.sh your_secure_password
+
+# Or custom generation (custom usernames)
+./generate-custom-auth.sh your_secure_password metrics_user admin_user
+```
+
+### 3. Edit .env File
+```bash
+nano .env  # Add your values
+```
+
+### 4. Start Monitoring
+```bash
+make start
+```
+
+### 5. Check Status
+```bash
+make status
+```
+
+## 🌐 Service Access
+
+- **Prometheus**: `https://your-domain.com/prometheus/`
+- **Grafana**: `https://your-domain.com/grafana/`
+- **Alertmanager**: `https://your-domain.com/alertmanager/`
+
+## 🔒 Security
+
+- ✅ All secrets stored in `.env` file (not in git)
+- ✅ `.env` added to `.gitignore`
+- ✅ Service access protected by authentication
+- ✅ Telegram notifications only to your chat
 
 ## 🏗️ Monitoring Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Prometheus    │    │     Grafana     │    │   Node Exporter │
-│   (Metrics)     │◄───┤  (Dashboards)   │    │  (System Metrics)│
+│   Prometheus    │    │     Grafana     │    │  Node Exporter  │
+│   (Metrics)     │◄───┤  (Dashboards)   │    │ (System Metrics)│
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          ▲                       ▲                       ▲
          │                       │                       │
          └───────────────────────┼───────────────────────┘
                                  │
-                    ┌─────────────────┐
-                    │     cAdvisor    │
+                    ┌────────────────────┐
+                    │     cAdvisor       │
                     │ (Container Metrics)│
-                    └─────────────────┘
+                    └────────────────────┘
 ```
 
 ## 🚀 Quick Start
